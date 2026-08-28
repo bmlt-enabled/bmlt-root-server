@@ -20,7 +20,6 @@
   let serviceBodiesLoaded = $state(false);
   let users: User[] = $state([]);
   let serviceBodies: ServiceBody[] = $state([]);
-  let filteredServiceBodies: ServiceBody[] = $state([]);
   let showModal = $state(false);
   let showDeleteModal = $state(false);
   let searchTerm = $state('');
@@ -133,16 +132,13 @@
     });
   });
 
-  $effect(() => {
-    // filteredServiceBodies will be an array of service bodies that the authenticated user can edit
-    // prettier-ignore
-    if ($authenticatedUser) {
-          filteredServiceBodies = serviceBodies
-              .sort((s1, s2) => s1.name.localeCompare(s2.name))
-              .filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 &&
-                  ($authenticatedUser?.type === 'admin' || isAdminForServiceBody($authenticatedUser.id, s)));
-      }
-  });
+  // Service bodies the authenticated user can edit, ignoring the search term.
+  let editableServiceBodies = $derived(
+    $authenticatedUser ? serviceBodies.filter((s) => $authenticatedUser?.type === 'admin' || isAdminForServiceBody($authenticatedUser.id, s)).sort((s1, s2) => s1.name.localeCompare(s2.name)) : []
+  );
+
+  // The editable service bodies further narrowed by the search term.
+  let filteredServiceBodies = $derived(editableServiceBodies.filter((s) => s.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1));
 
   let csvData = $derived(
     filteredServiceBodies.map((sb) => ({
@@ -165,7 +161,7 @@
 <div class="mx-auto max-w-3xl p-2">
   <h2 class="mb-4 text-center text-xl font-semibold dark:text-white">{$translations.serviceBodiesTitle}</h2>
   {#if usersLoaded && serviceBodiesLoaded}
-    {#if filteredServiceBodies.length}
+    {#if editableServiceBodies.length}
       <TableSearch placeholder={$translations.searchByName} hoverable={true} bind:inputValue={searchTerm}>
         <TableHead>
           <TableHeadCell colspan={$authenticatedUser?.type === 'admin' ? 2 : 1}>

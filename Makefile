@@ -109,12 +109,12 @@ frontend: $(FRONTEND)  ## Builds the frontend
 zip: $(ZIP_FILE) ## Builds zip file
 
 .PHONY: docker
-docker: zip ## Builds Docker Image
+docker: zip ## Builds Docker Image (single-arch, local load)
 	docker build --pull --build-arg PHP_VERSION=$(BASE_IMAGE_TAG) --label "org.opencontainers.image.revision=$(COMMIT)" --label "org.opencontainers.image.created=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')" -f docker/$(DOCKERFILE) . -t $(IMAGE):$(TAG)
 
 .PHONY: docker-push
-docker-push: ## Pushes docker image to Dockerhub
-	docker push $(IMAGE):$(TAG)
+docker-push: zip ## Builds and pushes multi-arch Docker image to Dockerhub
+	docker buildx build --pull --platform linux/amd64,linux/arm64/v8 --build-arg PHP_VERSION=$(BASE_IMAGE_TAG) --label "org.opencontainers.image.revision=$(COMMIT)" --label "org.opencontainers.image.created=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')" -f docker/$(DOCKERFILE) . -t $(IMAGE):$(TAG) --push
 
 .PHONY: dev
 dev: zip ## Docker Compose Up

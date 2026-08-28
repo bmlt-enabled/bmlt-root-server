@@ -1,3 +1,6 @@
+## 4.2.8 (UNRELEASED)
+* Fixed the Service Bodies page showing the "add service body" form when a search returned no matches.
+
 ## 4.2.7 (August 5, 2026)
 * Updated localization for Danish (da) language.
 

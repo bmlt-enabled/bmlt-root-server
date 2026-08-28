@@ -152,16 +152,19 @@ jobs:
           role-session-name: gh-actions-bmlt
           aws-region: us-east-1
 
+      - name: Set up QEMU 🖥
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx 🛠
+        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
+        uses: docker/setup-buildx-action@v4
+
       - name: Login to Docker Hub 🎫
         uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: make docker 🐳
-        if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
-        run: |
-          make docker
 
       - name: make docker-push 🐋
         if: contains(github.ref_name, 'main') || contains(github.ref_name, 'unstable')
