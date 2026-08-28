@@ -189,7 +189,6 @@
   function goToPage(pageNumber: number) {
     currentPosition = (pageNumber - 1) * itemsPerPage;
     lastEditedMeetingId = null;
-    filteredItems.slice(currentPosition, currentPosition + itemsPerPage);
   }
 
   function onSaved(meeting: Meeting) {
@@ -216,6 +215,10 @@
 
   function onDeleted(meeting: Meeting) {
     meetings = meetings.filter((m) => m.id !== meeting.id);
+    // Clamp the current page if deleting emptied the page we were on
+    if (currentPosition > 0 && currentPosition >= filteredItems.length) {
+      currentPosition = Math.max(0, (totalPages - 1) * itemsPerPage);
+    }
     closeModal();
   }
 
@@ -449,8 +452,6 @@
         <TableBodyCell class={meeting.published ? 'px-4 py-3 whitespace-nowrap' : 'min-w-[100px] bg-yellow-200 px-4 py-3 whitespace-nowrap text-gray-800'}>
           {#if meeting.startTime}
             {is24hrTime() ? meeting.startTime : convertTo12Hour(meeting.startTime)}
-          {:else}
-            ''
           {/if}
         </TableBodyCell>
         <TableBodyCell class={meeting.published ? 'px-4 py-3' : 'bg-yellow-200 px-4 py-3 text-gray-800'}>

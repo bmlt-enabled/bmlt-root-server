@@ -10,8 +10,9 @@ let xlsxWriteFileSpy: MockInstance<typeof XLSX.writeFileXLSX>;
 let usersWB: XLSX.WorkBook | null;
 let usersFile: string;
 
+vi.mock('xlsx', { spy: true });
+
 beforeAll(() => {
-  vi.mock('xlsx', { spy: true });
   sharedBeforeAll();
 });
 
