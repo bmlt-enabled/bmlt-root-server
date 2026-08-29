@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Aggregator\LocaleResolver;
+use App\Aggregator\TimezoneResolver;
 use App\Interfaces\MeetingRepositoryInterface;
 use App\Models\Change;
 use App\Models\Meeting;
@@ -624,7 +626,9 @@ class MeetingRepository implements MeetingRepositoryInterface
     public function create(array $values): Meeting
     {
         $values = collect($values);
-        $values->put('lang_enum', App::currentLocale());
+        // Respect an explicitly provided lang_enum (aggregator import) and otherwise default to
+        // the server locale (admin creates never pass lang_enum, so their behavior is unchanged).
+        $values->put('lang_enum', $values->get('lang_enum') ?: App::currentLocale());
         $mainValues = $values->reject(fn ($_, $fieldName) => !in_array($fieldName, Meeting::$mainFields))->toArray();
         $dataTemplates = $this->getDataTemplates();
         $dataValues = $values->reject(fn ($_, $fieldName) => !$dataTemplates->has($fieldName));
@@ -826,6 +830,16 @@ class MeetingRepository implements MeetingRepositoryInterface
     public function import(int $rootServerId, Collection $externalObjects): MeetingImportResult
     {
         $result = new MeetingImportResult();
+
+        // Fork addition: restrict the aggregator to virtual + hybrid meetings. Filtering here
+        // (before $sourceIds) means any in-person meetings already stored are absent from
+        // $sourceIds and get removed by the whereNotIn cleanup below.
+        if (config('aggregator.virtual_only')) {
+            $externalObjects = $externalObjects
+                ->filter(fn (ExternalMeeting $ex) => in_array($ex->venueType, [Meeting::VENUE_TYPE_VIRTUAL, Meeting::VENUE_TYPE_HYBRID], true))
+                ->values();
+        }
+
         $sourceIds = $externalObjects->map(fn (ExternalMeeting $ex) => $ex->id);
         $meetingIds = Meeting::query()
             ->where('root_server_id', $rootServerId)
@@ -899,8 +913,11 @@ class MeetingRepository implements MeetingRepositoryInterface
             'weekday_tinyint' => $externalMeeting->weekdayId - 1,
             'start_time' => $externalMeeting->startTime,
             'duration_time' => $externalMeeting->durationTime,
-            'time_zone' => $externalMeeting->timeZone,
-            'lang_enum' => $externalMeeting->langEnum,
+            // Fork additions: derive time_zone / lang_enum when the source has none.
+            'time_zone' => $externalMeeting->timeZone
+                ?: (config('aggregator.geocode_timezones') ? app(TimezoneResolver::class)->resolve($externalMeeting) : null),
+            'lang_enum' => $externalMeeting->langEnum
+                ?: (config('aggregator.infer_locale') ? app(LocaleResolver::class)->infer($rootServerId) : null),
             'email_contact' => $externalMeeting->emailContact,
             'latitude' => $externalMeeting->latitude,
             'longitude' => $externalMeeting->longitude,
