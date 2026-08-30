@@ -120,6 +120,30 @@ class SwitcherController extends Controller
         $venueTypesExclude = collect($venueTypes)->filter(fn ($v) => $v < 0)->map(fn ($v) => abs($v))->toArray();
         $venueTypesExclude = !empty($venueTypesExclude) ? $venueTypesExclude : null;
 
+        // Aggregator-only for now, and intentionally undocumented: sort every result
+        // by when it next starts (time-zone aware) and drop meetings that carry no
+        // time zone to reckon that from. It turns "what virtual meeting can I join soon?"
+        // into a single paged list instead of a per-time-zone query. Confined to
+        // aggregator mode so it can be shaped — or dropped — before it is offered to
+        // ordinary root servers. See MeetingRepository::getSearchResults.
+        $sortByNextStart = $isAggregatorMode && $request->boolean('sort_results_by_next_start');
+        // Shift the sort's reference time back by this many minutes so a meeting that
+        // started recently still sorts near the top rather than a week out — this is
+        // how a paged "starting soonest" list keeps showing in-progress meetings.
+        // Clamped to under a day; a bad value simply means no grace.
+        $nextStartGraceMinutes = max(0, min(1440, intval($request->input('next_start_grace_minutes', 0))));
+
+        // The reader's own IANA time zone. When present, the weekday and time-of-day
+        // filters are evaluated against each meeting's next occurrence converted into
+        // it, so "Tuesday" and "after 6pm" mean the reader's, not the meeting's. Only
+        // a plausible time zone string is passed through (it rides a bound parameter, so a
+        // bad one can't inject — it would just match nothing); anything else is
+        // ignored. Aggregator-only, like the sort it accompanies.
+        $targetTimeZone = $isAggregatorMode ? $request->input('target_time_zone') : null;
+        if (!is_string($targetTimeZone) || !preg_match('#^[A-Za-z][A-Za-z0-9_+/-]*$#', $targetTimeZone)) {
+            $targetTimeZone = null;
+        }
+
         $recursive = $request->input('recursive', '0') == '1';
         $services = $request->input('services', []) ?? [];
         $services = is_string($services) ? array_map(fn ($id) => trim($id), explode(',', $services)) : $services;
@@ -355,6 +379,9 @@ class SwitcherController extends Controller
             geoWidthKilometers: $geoWidthKilometers,
             needsDistanceField: $needsDistanceField,
             sortResultsByDistance: $sortResultsByDistance,
+            sortByNextStart: $sortByNextStart,
+            nextStartGraceMinutes: $nextStartGraceMinutes,
+            targetTimeZone: $targetTimeZone,
             searchString: $searchString,
             published: $published,
             eagerRootServers: $isAggregatorMode,
