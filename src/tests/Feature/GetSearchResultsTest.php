@@ -2591,7 +2591,7 @@ class GetSearchResultsTest extends TestCase
         FromFileConfig::set('aggregator_mode_enabled', true);
         $rootServer = $this->createRootServer(1);
 
-        // Put the meetings a few days out in every zone so neither is "today" —
+        // Put the meetings a few days out in every time zone so neither is "today" —
         // that keeps the east-before-west ordering below stable no matter what
         // time the test runs. weekday_tinyint is stored 0-indexed (0 = Sunday).
         $utcWeekday = intval(DB::selectOne('SELECT DAYOFWEEK(UTC_TIMESTAMP()) AS d')->d); // 1=Sun..7=Sat
@@ -2599,7 +2599,7 @@ class GetSearchResultsTest extends TestCase
 
         // Same weekday and local clock in two zones: New York reaches noon three
         // hours before Los Angeles, so it starts sooner in absolute time. A meeting
-        // with no zone can't be placed on a clock and should drop out.
+        // with no time zone can't be placed on a clock and should drop out.
         $this->createVirtualMeeting($rootServer, 'America/New_York', $weekday, 'East');
         $this->createVirtualMeeting($rootServer, 'America/Los_Angeles', $weekday, 'West');
         $this->createVirtualMeeting($rootServer, '', $weekday, 'Zoneless');
@@ -2639,10 +2639,10 @@ class GetSearchResultsTest extends TestCase
         // API weekday 1 = Sunday: matches for a New York reader...
         $this->get("$base&weekdays[]=1&target_time_zone=America/New_York")
             ->assertStatus(200)->assertJsonFragment(['meeting_name' => 'LateNighter']);
-        // ...but weekday 7 (Saturday, its own stored day) does not, in that zone.
+        // ...but weekday 7 (Saturday, its own stored day) does not, in that time zone.
         $this->get("$base&weekdays[]=7&target_time_zone=America/New_York")
             ->assertStatus(200)->assertJsonCount(0);
-        // Without a target zone it is filtered by its own stored Saturday.
+        // Without a target time zone it is filtered by its own stored Saturday.
         $this->get("$base&weekdays[]=7")
             ->assertStatus(200)->assertJsonFragment(['meeting_name' => 'LateNighter']);
     }
@@ -2659,7 +2659,7 @@ class GetSearchResultsTest extends TestCase
         // "Starts after 20:00" is true in New York (21:00)...
         $this->get("$base&StartsAfterH=20&target_time_zone=America/New_York")
             ->assertStatus(200)->assertJsonFragment(['meeting_name' => 'Evening']);
-        // ...but false against its stored 18:00 with no target zone.
+        // ...but false against its stored 18:00 with no target time zone.
         $this->get("$base&StartsAfterH=20")
             ->assertStatus(200)->assertJsonCount(0);
     }

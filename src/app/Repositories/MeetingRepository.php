@@ -19,7 +19,7 @@ class MeetingRepository implements MeetingRepositoryInterface
     private string $sqlDistanceFormula = "? * DEGREES(ACOS(LEAST(1.0, COS(RADIANS(latitude)) * COS(RADIANS(?)) * COS(RADIANS(longitude) - RADIANS(?)) + SIN(RADIANS(latitude)) * SIN(RADIANS(?)))))";
 
     // This week's occurrence of a meeting's weekday at its start_time, as a naive
-    // datetime in the meeting's OWN zone. Shared by the next-start sort and the
+    // datetime in the meeting's OWN time zone. Shared by the next-start sort and the
     // target_time_zone filters, which convert it onward. weekday_tinyint is stored
     // 0-indexed and CAST to SIGNED (an UNSIGNED underflow, 0 - 7, errors under
     // strict mode); DAYOFWEEK is 1-indexed, which the `+ 8` reconciles. CONVERT_TZ
@@ -41,10 +41,10 @@ class MeetingRepository implements MeetingRepositoryInterface
     private const NEXT_START_ORDER_BY =
         'MOD(TIMESTAMPDIFF(MINUTE, UTC_TIMESTAMP(), CONVERT_TZ(' . self::OCCURRENCE_LOCAL . ", time_zone, 'UTC')) + ? + 10080, 10080)";
 
-    // The same occurrence expressed in the *caller's* zone rather than the
+    // The same occurrence expressed in the *caller's* time zone rather than the
     // meeting's, so a weekday or time-of-day window filters in the reader's own
     // clock. The single `?` binds target_time_zone.
-    private static function occurrenceInTargetZone(): string
+    private static function occurrenceInTargetTimeZone(): string
     {
         return 'CONVERT_TZ(' . self::OCCURRENCE_LOCAL . ', time_zone, ?)';
     }
@@ -119,14 +119,14 @@ class MeetingRepository implements MeetingRepositoryInterface
 
         // With target_time_zone, a weekday means the reader's weekday: a meeting is
         // matched by the day its next occurrence falls on once converted into that
-        // zone, not by its stored weekday. `DAYOFWEEK(...) - 1` matches the 0-indexed
+        // time zone, not by its stored weekday. `DAYOFWEEK(...) - 1` matches the 0-indexed
         // form the caller's weekdays already use (Sunday = 0).
         if (!is_null($weekdaysInclude)) {
             if (is_null($targetTimeZone)) {
                 $meetings = $meetings->whereIn('weekday_tinyint', $weekdaysInclude);
             } else {
                 $placeholders = implode(',', array_fill(0, count($weekdaysInclude), '?'));
-                $meetings = $meetings->whereRaw('(DAYOFWEEK(' . self::occurrenceInTargetZone() . ") - 1) IN ($placeholders)", array_merge([$targetTimeZone], $weekdaysInclude));
+                $meetings = $meetings->whereRaw('(DAYOFWEEK(' . self::occurrenceInTargetTimeZone() . ") - 1) IN ($placeholders)", array_merge([$targetTimeZone], $weekdaysInclude));
             }
         }
 
@@ -135,7 +135,7 @@ class MeetingRepository implements MeetingRepositoryInterface
                 $meetings = $meetings->whereNotIn('weekday_tinyint', $weekdaysExclude);
             } else {
                 $placeholders = implode(',', array_fill(0, count($weekdaysExclude), '?'));
-                $meetings = $meetings->whereRaw('(DAYOFWEEK(' . self::occurrenceInTargetZone() . ") - 1) NOT IN ($placeholders)", array_merge([$targetTimeZone], $weekdaysExclude));
+                $meetings = $meetings->whereRaw('(DAYOFWEEK(' . self::occurrenceInTargetTimeZone() . ") - 1) NOT IN ($placeholders)", array_merge([$targetTimeZone], $weekdaysExclude));
             }
         }
 
@@ -148,11 +148,11 @@ class MeetingRepository implements MeetingRepositoryInterface
         }
 
         if ($sortByNextStart || !is_null($targetTimeZone)) {
-            // Both features need a zone to reckon the meeting's clock in — the sort to
+            // Both features need a time zone to reckon the meeting's clock in — the sort to
             // place it on an absolute timeline, target_time_zone to convert it into
             // the reader's. Without one the computed key is NULL, so these are
             // excluded rather than floated to the top. The literal string 'NULL' is
-            // filtered too: the aggregator import writes it for some zoneless records.
+            // filtered too: the aggregator import writes it for some records with no time zone.
             $meetings = $meetings
                 ->whereNotNull('time_zone')
                 ->whereNotIn('time_zone', ['', 'NULL'])
@@ -230,14 +230,14 @@ class MeetingRepository implements MeetingRepositoryInterface
         }
 
         // With target_time_zone these windows are the reader's time of day: each
-        // meeting's next occurrence is converted into that zone before the compare,
+        // meeting's next occurrence is converted into that time zone before the compare,
         // so "after 6pm" means 6pm for the reader, wherever the meeting is hosted.
         // Duration (min/max, below) is a length of time and needs no conversion.
         if (!is_null($startsAfter)) {
             if (is_null($targetTimeZone)) {
                 $meetings = $meetings->where('start_time', '>', $startsAfter);
             } else {
-                $meetings = $meetings->whereRaw('TIME(' . self::occurrenceInTargetZone() . ') > ?', [$targetTimeZone, $startsAfter]);
+                $meetings = $meetings->whereRaw('TIME(' . self::occurrenceInTargetTimeZone() . ') > ?', [$targetTimeZone, $startsAfter]);
             }
         }
 
@@ -245,7 +245,7 @@ class MeetingRepository implements MeetingRepositoryInterface
             if (is_null($targetTimeZone)) {
                 $meetings = $meetings->where('start_time', '<', $startsBefore);
             } else {
-                $meetings = $meetings->whereRaw('TIME(' . self::occurrenceInTargetZone() . ') < ?', [$targetTimeZone, $startsBefore]);
+                $meetings = $meetings->whereRaw('TIME(' . self::occurrenceInTargetTimeZone() . ') < ?', [$targetTimeZone, $startsBefore]);
             }
         }
 
@@ -255,7 +255,7 @@ class MeetingRepository implements MeetingRepositoryInterface
             if (is_null($targetTimeZone)) {
                 $meetings = $meetings->whereRaw("time_to_sec(start_time + duration_time) <= $endsBeforeSeconds");
             } else {
-                $meetings = $meetings->whereRaw('TIME_TO_SEC(ADDTIME(TIME(' . self::occurrenceInTargetZone() . '), duration_time)) <= ?', [$targetTimeZone, $endsBeforeSeconds]);
+                $meetings = $meetings->whereRaw('TIME_TO_SEC(ADDTIME(TIME(' . self::occurrenceInTargetTimeZone() . '), duration_time)) <= ?', [$targetTimeZone, $endsBeforeSeconds]);
             }
         }
 
@@ -350,10 +350,10 @@ class MeetingRepository implements MeetingRepositoryInterface
         if ($sortByNextStart) {
             // Order every meeting by the minutes until its next occurrence, reckoned
             // as an absolute instant so the result is one global "starting soonest"
-            // list independent of any single zone — exactly what a reader looking for
+            // list independent of any single time zone — exactly what a reader looking for
             // a virtual meeting to join wants, and what lets it be paged in SQL.
             //
-            // For each meeting: read "now" in its own zone, step forward to this
+            // For each meeting: read "now" in its own time zone, step forward to this
             // week's occurrence of its weekday at its start_time, convert that local
             // wall clock back to UTC, and take the signed minutes from now. `+ 10080`
             // then `MOD 10080` (minutes in a week) wraps an occurrence that has
