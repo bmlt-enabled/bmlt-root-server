@@ -47,6 +47,19 @@ jobs:
         run: |
           make lint
 
+      # sort_results_by_next_start uses CONVERT_TZ with IANA zone names, which needs
+      # the server's timezone tables. Normal installs and RDS have them; the bare CI
+      # service container does not. mysql_tzinfo_to_sql emits the `Offset` column
+      # unquoted, which MariaDB rejects as a reserved word, so quote it — valid on
+      # both engines.
+      - name: load timezone tables 🕐
+        env:
+          DB_PORT: ${{ job.services.db.ports[3306] }}
+        run: |
+          mysql_tzinfo_to_sql /usr/share/zoneinfo \
+            | sed 's/, Offset,/, `Offset`,/g' \
+            | mysql -h 127.0.0.1 -P "$DB_PORT" -u root -prootserver mysql
+
       - name: make test 🧪
         env:
           DB_PORT: ${{ job.services.db.ports[3306] }}

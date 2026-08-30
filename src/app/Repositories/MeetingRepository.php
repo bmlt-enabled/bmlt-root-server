@@ -18,6 +18,29 @@ class MeetingRepository implements MeetingRepositoryInterface
 {
     private string $sqlDistanceFormula = "? * DEGREES(ACOS(LEAST(1.0, COS(RADIANS(latitude)) * COS(RADIANS(?)) * COS(RADIANS(longitude) - RADIANS(?)) + SIN(RADIANS(latitude)) * SIN(RADIANS(?)))))";
 
+    // Minutes until a meeting next starts, reckoned as an absolute UTC instant. The
+    // single `?` binds a grace window in minutes: it shifts where the week wraps,
+    // so a meeting that started up to that many minutes ago keeps a small (top of
+    // list) key instead of jumping a week ahead — that is what keeps in-progress
+    // meetings visible. With a grace of 0 it is simply "minutes until next start".
+    // See the sortByNextStart branch in getSearchResults for what each step does
+    // and the CONVERT_TZ time-zone-table requirement.
+    private const NEXT_START_ORDER_BY = <<<'SQL'
+        MOD(
+            TIMESTAMPDIFF(MINUTE, UTC_TIMESTAMP(),
+                CONVERT_TZ(
+                    TIMESTAMP(
+                        DATE(CONVERT_TZ(UTC_TIMESTAMP(), 'UTC', time_zone))
+                            + INTERVAL MOD(CAST(weekday_tinyint AS SIGNED) - DAYOFWEEK(CONVERT_TZ(UTC_TIMESTAMP(), 'UTC', time_zone)) + 8, 7) DAY,
+                        start_time
+                    ),
+                    time_zone, 'UTC'
+                )
+            ) + ? + 10080,
+            10080
+        )
+        SQL;
+
     public function getSearchResults(
         array $meetingIdsInclude = null,
         array $meetingIdsExclude = null,
@@ -45,6 +68,8 @@ class MeetingRepository implements MeetingRepositoryInterface
         float $geoWidthKilometers = null,
         bool $needsDistanceField = false,
         bool $sortResultsByDistance = false,
+        bool $sortByNextStart = false,
+        int $nextStartGraceMinutes = 0,
         string $searchString = null,
         ?bool $published = null,
         bool $eagerServiceBodies = false,
@@ -97,6 +122,19 @@ class MeetingRepository implements MeetingRepositoryInterface
 
         if (!is_null($venueTypesExclude)) {
             $meetings = $meetings->whereNotIn('venue_type', $venueTypesExclude);
+        }
+
+        if ($sortByNextStart) {
+            // Ordering by when a meeting next starts is only meaningful for meetings
+            // whose wall-clock time has a zone to reckon it in. Without one the sort
+            // key is NULL, so these are excluded rather than floated to the top. The
+            // literal string 'NULL' is filtered too: the aggregator import writes it
+            // in place of an absent zone for some records.
+            $meetings = $meetings
+                ->whereNotNull('time_zone')
+                ->whereNotIn('time_zone', ['', 'NULL'])
+                ->whereNotNull('weekday_tinyint')
+                ->whereNotNull('start_time');
         }
 
         if (!is_null($servicesInclude)) {
@@ -267,6 +305,33 @@ class MeetingRepository implements MeetingRepositoryInterface
             if (!is_null($pageNum)) {
                 $meetings = $meetings->offset(max(0, ($pageNum - 1) * $pageSize));
             }
+        }
+
+        // sort by when the meeting next starts, and return
+        if ($sortByNextStart) {
+            // Order every meeting by the minutes until its next occurrence, reckoned
+            // as an absolute instant so the result is one global "starting soonest"
+            // list independent of any single zone — exactly what a reader looking for
+            // a virtual meeting to join wants, and what lets it be paged in SQL.
+            //
+            // For each meeting: read "now" in its own zone, step forward to this
+            // week's occurrence of its weekday at its start_time, convert that local
+            // wall clock back to UTC, and take the signed minutes from now. `+ 10080`
+            // then `MOD 10080` (minutes in a week) wraps an occurrence that has
+            // already passed today around to next week, with no branching.
+            // weekday_tinyint is stored 0-indexed (0 = Sunday) while MySQL DAYOFWEEK
+            // is 1-indexed (1 = Sunday), which the `+ 8` reconciles; it is also an
+            // UNSIGNED column, so it is CAST to SIGNED before the subtraction or an
+            // underflow (0 - 7) errors under MySQL's strict mode. CONVERT_TZ needs
+            // the server's IANA time zone tables loaded (RDS has them; a bare
+            // container needs `mysql_tzinfo_to_sql`).
+            //
+            // The grace window keeps meetings that started within the last few
+            // minutes near the top instead of a week away — see NEXT_START_ORDER_BY —
+            // so a paged "starting soonest" list still surfaces in-progress meetings.
+            return $meetings
+                ->orderByRaw(self::NEXT_START_ORDER_BY, [$nextStartGraceMinutes])
+                ->get();
         }
 
         // sort and return

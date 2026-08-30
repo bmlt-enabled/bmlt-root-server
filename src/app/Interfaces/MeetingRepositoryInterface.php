@@ -35,6 +35,8 @@ interface MeetingRepositoryInterface
         float $geoWidthKilometers = null,
         bool $needsDistanceField = false,
         bool $sortResultsByDistance = false,
+        bool $sortByNextStart = false,
+        int $nextStartGraceMinutes = 0,
         string $searchString = null,
         bool $published = true,
         bool $eagerServiceBodies = false,

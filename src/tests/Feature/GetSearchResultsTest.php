@@ -2585,4 +2585,54 @@ class GetSearchResultsTest extends TestCase
         $this->assertArrayHasKey('coordinates', $meetingData);
         $this->assertNull($meetingData['coordinates']);
     }
+
+    public function testSortByNextStartOrdersByAbsoluteStartAndDropsZonelessMeetings()
+    {
+        FromFileConfig::set('aggregator_mode_enabled', true);
+        $rootServer = $this->createRootServer(1);
+
+        // Put the meetings a few days out in every zone so neither is "today" —
+        // that keeps the east-before-west ordering below stable no matter what
+        // time the test runs. weekday_tinyint is stored 0-indexed (0 = Sunday).
+        $utcWeekday = intval(DB::selectOne('SELECT DAYOFWEEK(UTC_TIMESTAMP()) AS d')->d); // 1=Sun..7=Sat
+        $weekday = ($utcWeekday - 1 + 3) % 7;
+
+        // Same weekday and local clock in two zones: New York reaches noon three
+        // hours before Los Angeles, so it starts sooner in absolute time. A meeting
+        // with no zone can't be placed on a clock and should drop out.
+        $this->createVirtualMeeting($rootServer, 'America/New_York', $weekday, 'East');
+        $this->createVirtualMeeting($rootServer, 'America/Los_Angeles', $weekday, 'West');
+        $this->createVirtualMeeting($rootServer, '', $weekday, 'Zoneless');
+
+        $names = collect(
+            $this->get('/client_interface/json/?switcher=GetSearchResults&sort_results_by_next_start=1&venue_types[]=2&venue_types[]=3&page_size=100&page_num=1')
+                ->assertStatus(200)
+                ->json()
+        )->pluck('meeting_name');
+
+        $this->assertFalse($names->contains('Zoneless'), 'a meeting with no time zone should be dropped');
+        // Tolerant of any other meetings the fixture may carry: just our two, in order.
+        $ours = $names->filter(fn ($n) => in_array($n, ['East', 'West']))->values()->all();
+        $this->assertEquals(['East', 'West'], $ours, 'the eastern meeting starts sooner in absolute time');
+    }
+
+    public function testSortByNextStartIsIgnoredOutsideAggregatorMode()
+    {
+        // Not aggregator mode: the flag does nothing, so the zoneless meeting is
+        // still returned and not reordered away.
+        $this->createMeeting(['venue_type' => 2, 'time_zone' => '']);
+        $this->get('/client_interface/json/?switcher=GetSearchResults&sort_results_by_next_start=1&venue_types[]=2&page_size=100&page_num=1')
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
+
+    private function createVirtualMeeting(RootServer $rootServer, string $timeZone, int $weekday, string $name): void
+    {
+        $meeting = $this->createMeeting(
+            ['venue_type' => 2, 'time_zone' => $timeZone, 'weekday_tinyint' => $weekday, 'start_time' => '12:00:00'],
+            ['meeting_name' => $name]
+        );
+        $meeting->rootServer()->associate($rootServer);
+        $meeting->save();
+    }
 }
