@@ -2626,10 +2626,48 @@ class GetSearchResultsTest extends TestCase
             ->assertJsonCount(1);
     }
 
-    private function createVirtualMeeting(RootServer $rootServer, string $timeZone, int $weekday, string $name): void
+    public function testTargetTimeZoneShiftsTheWeekdayFilterIntoTheReadersZone()
+    {
+        FromFileConfig::set('aggregator_mode_enabled', true);
+        $rootServer = $this->createRootServer(1);
+
+        // Saturday 23:00 in Los Angeles is Sunday for a New York reader — stored
+        // weekday 6 (Saturday, 0-indexed), reader weekday Sunday.
+        $this->createVirtualMeeting($rootServer, 'America/Los_Angeles', 6, 'LateNighter', '23:00:00');
+
+        $base = '/client_interface/json/?switcher=GetSearchResults&venue_types[]=2&page_size=100&page_num=1';
+        // API weekday 1 = Sunday: matches for a New York reader...
+        $this->get("$base&weekdays[]=1&target_time_zone=America/New_York")
+            ->assertStatus(200)->assertJsonFragment(['meeting_name' => 'LateNighter']);
+        // ...but weekday 7 (Saturday, its own stored day) does not, in that zone.
+        $this->get("$base&weekdays[]=7&target_time_zone=America/New_York")
+            ->assertStatus(200)->assertJsonCount(0);
+        // Without a target zone it is filtered by its own stored Saturday.
+        $this->get("$base&weekdays[]=7")
+            ->assertStatus(200)->assertJsonFragment(['meeting_name' => 'LateNighter']);
+    }
+
+    public function testTargetTimeZoneEvaluatesTheTimeWindowInTheReadersZone()
+    {
+        FromFileConfig::set('aggregator_mode_enabled', true);
+        $rootServer = $this->createRootServer(1);
+
+        // 18:00 in Los Angeles is 21:00 for a New York reader.
+        $this->createVirtualMeeting($rootServer, 'America/Los_Angeles', 3, 'Evening', '18:00:00');
+
+        $base = '/client_interface/json/?switcher=GetSearchResults&venue_types[]=2&page_size=100&page_num=1';
+        // "Starts after 20:00" is true in New York (21:00)...
+        $this->get("$base&StartsAfterH=20&target_time_zone=America/New_York")
+            ->assertStatus(200)->assertJsonFragment(['meeting_name' => 'Evening']);
+        // ...but false against its stored 18:00 with no target zone.
+        $this->get("$base&StartsAfterH=20")
+            ->assertStatus(200)->assertJsonCount(0);
+    }
+
+    private function createVirtualMeeting(RootServer $rootServer, string $timeZone, int $weekday, string $name, string $startTime = '12:00:00'): void
     {
         $meeting = $this->createMeeting(
-            ['venue_type' => 2, 'time_zone' => $timeZone, 'weekday_tinyint' => $weekday, 'start_time' => '12:00:00'],
+            ['venue_type' => 2, 'time_zone' => $timeZone, 'weekday_tinyint' => $weekday, 'start_time' => $startTime],
             ['meeting_name' => $name]
         );
         $meeting->rootServer()->associate($rootServer);

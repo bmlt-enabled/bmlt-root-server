@@ -133,6 +133,17 @@ class SwitcherController extends Controller
         // Clamped to under a day; a bad value simply means no grace.
         $nextStartGraceMinutes = max(0, min(1440, intval($request->input('next_start_grace_minutes', 0))));
 
+        // The reader's own IANA zone. When present, the weekday and time-of-day
+        // filters are evaluated against each meeting's next occurrence converted into
+        // it, so "Tuesday" and "after 6pm" mean the reader's, not the meeting's. Only
+        // a plausible zone string is passed through (it rides a bound parameter, so a
+        // bad one can't inject — it would just match nothing); anything else is
+        // ignored. Aggregator-only, like the sort it accompanies.
+        $targetTimeZone = $isAggregatorMode ? $request->input('target_time_zone') : null;
+        if (!is_string($targetTimeZone) || !preg_match('#^[A-Za-z][A-Za-z0-9_+/-]*$#', $targetTimeZone)) {
+            $targetTimeZone = null;
+        }
+
         $recursive = $request->input('recursive', '0') == '1';
         $services = $request->input('services', []) ?? [];
         $services = is_string($services) ? array_map(fn ($id) => trim($id), explode(',', $services)) : $services;
@@ -370,6 +381,7 @@ class SwitcherController extends Controller
             sortResultsByDistance: $sortResultsByDistance,
             sortByNextStart: $sortByNextStart,
             nextStartGraceMinutes: $nextStartGraceMinutes,
+            targetTimeZone: $targetTimeZone,
             searchString: $searchString,
             published: $published,
             eagerRootServers: $isAggregatorMode,

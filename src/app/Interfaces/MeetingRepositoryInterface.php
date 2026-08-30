@@ -37,6 +37,7 @@ interface MeetingRepositoryInterface
         bool $sortResultsByDistance = false,
         bool $sortByNextStart = false,
         int $nextStartGraceMinutes = 0,
+        string $targetTimeZone = null,
         string $searchString = null,
         bool $published = true,
         bool $eagerServiceBodies = false,
