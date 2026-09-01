@@ -19,6 +19,7 @@ use App\Repositories\RootServerRepository;
 use App\Repositories\ServiceBodyRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\UserRepository;
+use App\Services\TimeZoneFinder;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -38,6 +39,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceBodyRepositoryInterface::class, ServiceBodyRepository::class);
         $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+
+        $this->app->singleton(TimeZoneFinder::class);
     }
 
     /**
