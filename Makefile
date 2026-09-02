@@ -121,7 +121,7 @@ dev: zip ## Docker Compose Up
 	docker compose -f docker/docker-compose.yml $(EXTRA_DOCKER_COMPOSE_ARGS) up --build
 
 .PHONY: test
-test:  ## Runs PHP Tests
+test: $(TIMEZONE_ASSETS)  ## Runs PHP Tests
 	$(TEST_PREFIX) php artisan test --parallel --recreate-databases --display-deprecations --coverage-clover coverage.xml
 #	$(TEST_PREFIX) vendor/bin/phpunit tests/Feature/Admin/ServiceBodyPartialUpdateTest.php
 #	$(TEST_PREFIX) vendor/bin/phpunit --filter testUpdateServiceBodyAsServiceBodyAdmin tests/Feature/Admin/ServiceBodyPartialUpdateTest.php
