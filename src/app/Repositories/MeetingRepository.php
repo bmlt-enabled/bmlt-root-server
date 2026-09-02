@@ -9,6 +9,7 @@ use App\Models\MeetingData;
 use App\Models\MeetingLongData;
 use App\Repositories\External\ExternalMeeting;
 use App\Repositories\Import\MeetingImportResult;
+use App\Services\TimeZoneFinder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -955,6 +956,7 @@ class MeetingRepository implements MeetingRepositoryInterface
 
         foreach ($externalObjects as $external) {
             $external = $this->castExternal($external);
+            $this->deriveMissingTimeZone($external);
             $db = $meetingsBySourceId->get($external->id);
 
             $serviceBodyId = $serviceBodySourceIdToIdMap->get($external->serviceBodyId);
@@ -983,6 +985,40 @@ class MeetingRepository implements MeetingRepositoryInterface
     private function castExternal($obj): ExternalMeeting
     {
         return $obj;
+    }
+
+    /**
+     * Fill in a time zone for a virtual/hybrid meeting that arrived without one,
+     * deriving it from the meeting's coordinates. A time zone provided by the
+     * source server is always left untouched, so if the source later sets the
+     * field the source value wins on the next sync. Mutating the external object
+     * here (before both the isEqual check and the create/update) keeps the write
+     * and the change comparison consistent, so re-syncs don't churn.
+     */
+    private function deriveMissingTimeZone(ExternalMeeting $external): void
+    {
+        if (!config('aggregator.derive_missing_timezones', true)) {
+            return;
+        }
+        if (!in_array($external->venueType, [Meeting::VENUE_TYPE_VIRTUAL, Meeting::VENUE_TYPE_HYBRID], true)) {
+            return;
+        }
+        if (!$this->isMissingTimeZone($external->timeZone)) {
+            return;
+        }
+        if (is_null($external->latitude) || is_null($external->longitude)) {
+            return;
+        }
+
+        $timeZone = app(TimeZoneFinder::class)->find($external->latitude, $external->longitude);
+        if (!is_null($timeZone)) {
+            $external->timeZone = $timeZone;
+        }
+    }
+
+    private function isMissingTimeZone(?string $timeZone): bool
+    {
+        return is_null($timeZone) || in_array(strtoupper(trim($timeZone)), ['', 'NULL'], true);
     }
 
     private function externalMeetingToValuesArray(int $rootServerId, int $serviceBodyId, ExternalMeeting $externalMeeting, Collection $formatSourceIdToSharedIdMap): array

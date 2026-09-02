@@ -8,6 +8,7 @@
         "php": "^8.3.0",
         "darkaonline/l5-swagger": "^11.0",
         "doctrine/dbal": "^4.2",
+        "glhd/laravel-timezone-mapper": "^1.5",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.1",

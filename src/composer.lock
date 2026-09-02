@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "259dccff427287d4d87cb38c441b9a8c",
+    "content-hash": "0fc3effbc8ac290b532bdb18e01fd5d0",
     "packages": [
         {
             "name": "brick/math",
@@ -887,6 +887,67 @@
                 }
             ],
             "time": "2025-12-03T09:33:47+00:00"
+        },
+        {
+            "name": "glhd/laravel-timezone-mapper",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/glhd/laravel-timezone-mapper.git",
+                "reference": "1c273eb9a09b2ce0d022136ca43603191c6e04d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/glhd/laravel-timezone-mapper/zipball/1c273eb9a09b2ce0d022136ca43603191c6e04d2",
+                "reference": "1c273eb9a09b2ce0d022136ca43603191c6e04d2",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "*",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.93",
+                "mockery/mockery": "^1.6",
+                "orchestra/testbench": "^6.24|^7.10|^8.33|^9.17|^10.11|^11.0|12.x-dev",
+                "phpunit/phpunit": "^12.5|^13.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "TimezoneMapper": "Galahad\\TimezoneMapper\\Facades\\TimezoneMapper"
+                    },
+                    "providers": [
+                        "Galahad\\TimezoneMapper\\TimezoneMapperProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Galahad\\TimezoneMapper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Morrell",
+                    "homepage": "http://www.cmorrell.com"
+                }
+            ],
+            "description": "Timezone mapper for Laravel",
+            "keywords": [
+                "laravel",
+                "timezone"
+            ],
+            "support": {
+                "issues": "https://github.com/glhd/laravel-timezone-mapper/issues",
+                "source": "https://github.com/glhd/laravel-timezone-mapper/tree/1.5.0"
+            },
+            "time": "2026-03-23T18:11:35+00:00"
         },
         {
             "name": "graham-campbell/result-type",

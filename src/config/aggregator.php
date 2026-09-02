@@ -12,4 +12,9 @@ return [
         # {"id":"139","name":"NA Argentina","url":"https://www.na.org.ar/main_server/"},
         139 => ['request_delay' => 10, 'retry_delay' => 300],
     ],
+
+    // Derive a time zone for virtual/hybrid meetings that arrive without one from
+    // the source server, using their coordinates. A source-provided time zone is
+    // always kept. Set to false to disable derivation entirely.
+    'derive_missing_timezones' => filter_var(env('AGGREGATOR_DERIVE_MISSING_TIMEZONES', true), FILTER_VALIDATE_BOOLEAN),
 ];
