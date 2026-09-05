@@ -7,6 +7,8 @@ use App\Models\Change;
 use App\Models\Meeting;
 use App\Models\MeetingData;
 use App\Models\MeetingLongData;
+use App\Models\RootServer;
+use App\Interfaces\TimeZoneRepositoryInterface;
 use App\Repositories\External\ExternalMeeting;
 use App\Repositories\Import\MeetingImportResult;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +18,19 @@ use Illuminate\Support\Facades\DB;
 
 class MeetingRepository implements MeetingRepositoryInterface
 {
+    private const STOCK_MAP_CENTER_LATITUDE = 34.235918;
+    private const STOCK_MAP_CENTER_LONGITUDE = -118.563659;
+
+    private array $timeZoneByCoordinate = [];
+
     private string $sqlDistanceFormula = "? * DEGREES(ACOS(LEAST(1.0, COS(RADIANS(latitude)) * COS(RADIANS(?)) * COS(RADIANS(longitude) - RADIANS(?)) + SIN(RADIANS(latitude)) * SIN(RADIANS(?)))))";
+
+    private TimeZoneRepositoryInterface $timeZoneRepository;
+
+    public function __construct(TimeZoneRepositoryInterface $timeZoneRepository)
+    {
+        $this->timeZoneRepository = $timeZoneRepository;
+    }
 
     // This week's occurrence of a meeting's weekday at its start_time, as a naive
     // datetime in the meeting's OWN time zone. Shared by the next-start sort and the
@@ -953,8 +967,15 @@ class MeetingRepository implements MeetingRepositoryInterface
         $allMeetings = $this->getSearchResults(rootServersInclude: [$rootServerId]);
         $meetingsBySourceId = $allMeetings->mapWithKeys(fn ($meeting, $_) => [$meeting->source_id => $meeting]);
 
+        $deriveTimeZones = (bool) config('aggregator.derive_missing_timezones');
+        $placeholderCenters = $deriveTimeZones ? $this->placeholderCenters(RootServer::query()->find($rootServerId)) : [];
+        $this->timeZoneByCoordinate = [];
+
         foreach ($externalObjects as $external) {
             $external = $this->castExternal($external);
+            if ($deriveTimeZones && $external->shouldDeriveTimeZone($placeholderCenters)) {
+                $this->deriveTimeZone($external);
+            }
             $db = $meetingsBySourceId->get($external->id);
 
             $serviceBodyId = $serviceBodySourceIdToIdMap->get($external->serviceBodyId);
@@ -983,6 +1004,42 @@ class MeetingRepository implements MeetingRepositoryInterface
     private function castExternal($obj): ExternalMeeting
     {
         return $obj;
+    }
+
+    private function deriveTimeZone(ExternalMeeting $external): void
+    {
+        $timeZone = $this->timeZoneForCoordinate($external->latitude, $external->longitude);
+        if (!is_null($timeZone)) {
+            $external->timeZone = $timeZone;
+        }
+    }
+
+    private function placeholderCenters(?RootServer $rootServer): array
+    {
+        $centers = [
+            ['latitude' => self::STOCK_MAP_CENTER_LATITUDE, 'longitude' => self::STOCK_MAP_CENTER_LONGITUDE],
+        ];
+
+        $live = $rootServer?->map_center;
+        if (!is_null($live)) {
+            $centers[] = $live;
+        }
+
+        $frozen = config('aggregator.known_map_centers')[$rootServer?->source_id] ?? null;
+        if (is_array($frozen) && isset($frozen[0], $frozen[1]) && is_numeric($frozen[0]) && is_numeric($frozen[1])) {
+            $centers[] = ['latitude' => (float)$frozen[0], 'longitude' => (float)$frozen[1]];
+        }
+
+        return $centers;
+    }
+
+    private function timeZoneForCoordinate(float $latitude, float $longitude): ?string
+    {
+        $key = round($latitude, 4) . ',' . round($longitude, 4);
+        if (!array_key_exists($key, $this->timeZoneByCoordinate)) {
+            $this->timeZoneByCoordinate[$key] = $this->timeZoneRepository->getByCoordinates($latitude, $longitude);
+        }
+        return $this->timeZoneByCoordinate[$key];
     }
 
     private function externalMeetingToValuesArray(int $rootServerId, int $serviceBodyId, ExternalMeeting $externalMeeting, Collection $formatSourceIdToSharedIdMap): array
