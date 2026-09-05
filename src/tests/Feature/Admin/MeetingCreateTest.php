@@ -953,7 +953,7 @@ class MeetingCreateTest extends TestCase
         $area = $this->createArea('area1', 'area1', 0, adminUserId: $user->id_bigint);
         $format = Format::query()->first();
 
-        $meetingRepository = new MeetingRepository();
+        $meetingRepository = app(MeetingRepository::class);
         foreach ($meetingRepository->getDataTemplates() as $template) {
             if ($template->key == 'meeting_name') {
                 continue;

@@ -9,6 +9,7 @@ use App\Interfaces\MigrationRepositoryInterface;
 use App\Interfaces\RootServerRepositoryInterface;
 use App\Interfaces\ServiceBodyRepositoryInterface;
 use App\Interfaces\SettingRepositoryInterface;
+use App\Interfaces\TimeZoneRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\RootServer;
 use App\Repositories\ChangeRepository;
@@ -18,6 +19,7 @@ use App\Repositories\MigrationRepository;
 use App\Repositories\RootServerRepository;
 use App\Repositories\ServiceBodyRepository;
 use App\Repositories\SettingRepository;
+use App\Repositories\TimeZoneRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -38,6 +40,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceBodyRepositoryInterface::class, ServiceBodyRepository::class);
         $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->singleton(TimeZoneRepositoryInterface::class, TimeZoneRepository::class);
     }
 
     /**

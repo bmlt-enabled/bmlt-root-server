@@ -34,7 +34,7 @@ class MeetingResource extends JsonResource
     public function toArray($request)
     {
         if (!self::$isRequestInitialized) {
-            $meetingRepository = new MeetingRepository();
+            $meetingRepository = app(MeetingRepository::class);
             self::$dataTemplates = $meetingRepository
                 ->getDataTemplates()
                 ->reject(fn ($template, $_) => $template->key == 'meeting_name');

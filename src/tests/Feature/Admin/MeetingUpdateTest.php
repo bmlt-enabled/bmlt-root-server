@@ -38,7 +38,7 @@ class MeetingUpdateTest extends TestCase
             self::$hybridFormatId = $formatRepository->getHybridFormat()->shared_id_bigint;
             self::$temporarilyClosedFormatId = $formatRepository->getTemporarilyClosedFormat()->shared_id_bigint;
             self::$hiddenFormatIds = collect([self::$virtualFormatId, self::$hybridFormatId, self::$temporarilyClosedFormatId]);
-            $meetingRepository = new MeetingRepository();
+            $meetingRepository = app(MeetingRepository::class);
             self::$extraFieldsTemplates = $meetingRepository
                 ->getDataTemplates()
                 ->reject(fn($template, $_) => in_array($template->key, MeetingData::STOCK_FIELDS));
@@ -797,7 +797,7 @@ class MeetingUpdateTest extends TestCase
             ['location_street' => '813 Darby St', 'location_municipality' => 'Raleigh', 'location_province' => 'NC', 'virtual_meeting_link' => 'https://zoom.us']
         );
 
-        $meetingRepository = new MeetingRepository();
+        $meetingRepository = app(MeetingRepository::class);
         foreach ($meetingRepository->getDataTemplates() as $template) {
             if ($template->key == 'meeting_name') {
                 continue;

@@ -7,6 +7,8 @@ use Illuminate\Support\Collection;
 
 class ExternalMeeting extends ExternalObject
 {
+    private const COORDINATE_MATCH_TOLERANCE = 0.0001;
+
     public int $id;
     public int $serviceBodyId;
     public int $weekdayId;
@@ -72,6 +74,59 @@ class ExternalMeeting extends ExternalObject
         $this->worldId = $this->validateNullableString($values, 'worldid_mixed');
         $this->published = $this->validateBool($values, 'published');
         $this->formatIds = $this->validateIntArray($values, 'format_shared_id_list');
+    }
+
+    public function hasTimeZone(): bool
+    {
+        return !is_null($this->timeZone) && strtoupper(trim($this->timeZone)) !== 'NULL';
+    }
+
+    public function hasCoordinates(): bool
+    {
+        if (is_null($this->latitude) || is_null($this->longitude)) {
+            return false;
+        }
+        return $this->latitude != 0.0 || $this->longitude != 0.0;
+    }
+
+    public function hasTrustworthyLocation(): bool
+    {
+        $hasCityAndState = !empty($this->locationMunicipality) && !empty($this->locationProvince);
+        $hasPostalCode = !empty($this->locationPostalCode1);
+        return $hasCityAndState || $hasPostalCode;
+    }
+
+    public function shouldDeriveTimeZone(array $placeholderCenters): bool
+    {
+        if (!in_array($this->venueType, [Meeting::VENUE_TYPE_VIRTUAL, Meeting::VENUE_TYPE_HYBRID], true)) {
+            return false;
+        }
+        if ($this->hasTimeZone()) {
+            return false;
+        }
+        if (!$this->hasTrustworthyLocation()) {
+            return false;
+        }
+        if (!$this->hasCoordinates()) {
+            return false;
+        }
+        return !$this->isPlaceholderCoordinate($placeholderCenters);
+    }
+
+    private function isPlaceholderCoordinate(array $placeholderCenters): bool
+    {
+        foreach ($placeholderCenters as $center) {
+            if ($this->coordinatesMatch($this->latitude, $this->longitude, $center['latitude'], $center['longitude'])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function coordinatesMatch(float $lat1, float $lon1, float $lat2, float $lon2): bool
+    {
+        return abs($lat1 - $lat2) < self::COORDINATE_MATCH_TOLERANCE
+            && abs($lon1 - $lon2) < self::COORDINATE_MATCH_TOLERANCE;
     }
 
     public function isEqual(Meeting $meeting, Collection $serviceBodyIdToSourceIdMap, Collection $formatSharedIdToSourceIdMap): bool

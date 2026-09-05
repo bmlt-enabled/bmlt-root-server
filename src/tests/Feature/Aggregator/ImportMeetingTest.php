@@ -3,6 +3,7 @@
 namespace Tests\Feature\Aggregator;
 
 use App\FromFileConfig;
+use App\Interfaces\TimeZoneRepositoryInterface;
 use App\Models\Meeting;
 use App\Repositories\External\ExternalFormat;
 use App\Repositories\External\ExternalMeeting;
@@ -144,7 +145,7 @@ class ImportMeetingTest extends TestCase
         $sbRepository->import($rootServer1->id, collect([$extSb]));
         $fmtRepository = new FormatRepository();
         $fmtRepository->import($rootServer1->id, collect([$extF1, $extF2]));
-        $mtgRepository = new MeetingRepository();
+        $mtgRepository = app(MeetingRepository::class);
         $mtgRepository->import($rootServer1->id, collect([$externalMeeting]));
 
         $sb = $sbRepository->search()->first();
@@ -186,7 +187,7 @@ class ImportMeetingTest extends TestCase
         $this->create($rootServer1->id, $externalMeeting->id, $r1sb->id_bigint, [$r1f1->shared_id_bigint, $r1f2->shared_id_bigint]);
         $this->create($rootServer2->id, $externalMeeting->id, $r2sb->id_bigint, [$r2f1->shared_id_bigint, $r2f2->shared_id_bigint]);
 
-        $repository = new MeetingRepository();
+        $repository = app(MeetingRepository::class);
         $repository->import($rootServer1->id, collect([$externalMeeting]));
 
         $all = $repository->getSearchResults();
@@ -201,6 +202,152 @@ class ImportMeetingTest extends TestCase
         $this->assertNotNull($db);
         $this->assertFalse($externalMeeting->isEqual($db, collect([$r2sb->id_bigint => $r2sb->source_id]), collect([$r2f1->shared_id_bigint => $r2f1->source_id, $r2f2->shared_id_bigint => $r2f2->source_id])));
         $this->assertEquals($rootServer2->id, $db->root_server_id);
+    }
+
+    private function fakeTimeZoneLookup(?string $zone): void
+    {
+        $this->app->instance(TimeZoneRepositoryInterface::class, new class ($zone) implements TimeZoneRepositoryInterface {
+            public function __construct(private ?string $zone)
+            {
+            }
+
+            public function getByCoordinates(float $latitude, float $longitude): ?string
+            {
+                return $this->zone;
+            }
+        });
+    }
+
+    private function importDeps(int $rootServerId): array
+    {
+        $extSb = $this->externalServiceBody();
+        $extF1 = $this->externalFormat('500', 'en');
+        app(ServiceBodyRepository::class)->import($rootServerId, collect([$extSb]));
+        (new FormatRepository())->import($rootServerId, collect([$extF1]));
+        return [$extSb, $extF1];
+    }
+
+    private function virtualMeetingMissingTimeZone(ExternalServiceBody $extSb, array $formats): ExternalMeeting
+    {
+        $external = $this->externalMeeting($extSb, $formats);
+        $external->venueType = Meeting::VENUE_TYPE_VIRTUAL;
+        $external->timeZone = null;
+        $external->latitude = 40.7128;
+        $external->longitude = -74.0060;
+        return $external;
+    }
+
+    private function arrangeVirtualMeetingMissingTimeZone(int $rootServerId): ExternalMeeting
+    {
+        [$extSb, $extF1] = $this->importDeps($rootServerId);
+        return $this->virtualMeetingMissingTimeZone($extSb, [$extF1]);
+    }
+
+    private function storedMeeting(int $rootServerId): Meeting
+    {
+        return Meeting::query()->where('root_server_id', $rootServerId)->firstOrFail();
+    }
+
+    public function testDerivesMissingTimeZoneOnImport()
+    {
+        FromFileConfig::set('aggregator_mode_enabled', true);
+        config(['aggregator.derive_missing_timezones' => true]);
+        $this->fakeTimeZoneLookup('America/New_York');
+
+        $rootServer = $this->createRootServer(1);
+        $external = $this->arrangeVirtualMeetingMissingTimeZone($rootServer->id);
+        (app(MeetingRepository::class))->import($rootServer->id, collect([$external]));
+
+        $this->assertEquals('America/New_York', $this->storedMeeting($rootServer->id)->time_zone);
+    }
+
+    public function testDoesNotDeriveTimeZoneWhenFeatureDisabled()
+    {
+        FromFileConfig::set('aggregator_mode_enabled', true);
+        config(['aggregator.derive_missing_timezones' => false]);
+        $this->fakeTimeZoneLookup('America/New_York');
+
+        $rootServer = $this->createRootServer(1);
+        $external = $this->arrangeVirtualMeetingMissingTimeZone($rootServer->id);
+        (app(MeetingRepository::class))->import($rootServer->id, collect([$external]));
+
+        $this->assertEmpty($this->storedMeeting($rootServer->id)->time_zone);
+    }
+
+    public function testDisablingFeatureRevertsDerivedTimeZoneOnReimport()
+    {
+        FromFileConfig::set('aggregator_mode_enabled', true);
+        $this->fakeTimeZoneLookup('America/New_York');
+
+        $rootServer = $this->createRootServer(1);
+        [$extSb, $extF1] = $this->importDeps($rootServer->id);
+
+        config(['aggregator.derive_missing_timezones' => true]);
+        (app(MeetingRepository::class))->import($rootServer->id, collect([$this->virtualMeetingMissingTimeZone($extSb, [$extF1])]));
+        $this->assertEquals('America/New_York', $this->storedMeeting($rootServer->id)->time_zone);
+
+        config(['aggregator.derive_missing_timezones' => false]);
+        (app(MeetingRepository::class))->import($rootServer->id, collect([$this->virtualMeetingMissingTimeZone($extSb, [$extF1])]));
+        $this->assertEmpty($this->storedMeeting($rootServer->id)->time_zone);
+    }
+
+    public function testKeepsSourceProvidedTimeZone()
+    {
+        FromFileConfig::set('aggregator_mode_enabled', true);
+        config(['aggregator.derive_missing_timezones' => true]);
+        $this->fakeTimeZoneLookup('America/New_York');
+
+        $rootServer = $this->createRootServer(1);
+        $external = $this->arrangeVirtualMeetingMissingTimeZone($rootServer->id);
+        $external->timeZone = 'America/Los_Angeles';
+        (app(MeetingRepository::class))->import($rootServer->id, collect([$external]));
+
+        $this->assertEquals('America/Los_Angeles', $this->storedMeeting($rootServer->id)->time_zone);
+    }
+
+    public function testDoesNotDeriveTimeZoneOnStockMapCenter()
+    {
+        FromFileConfig::set('aggregator_mode_enabled', true);
+        config(['aggregator.derive_missing_timezones' => true]);
+        $this->fakeTimeZoneLookup('America/New_York');
+
+        $rootServer = $this->createRootServer(1);
+        $external = $this->arrangeVirtualMeetingMissingTimeZone($rootServer->id);
+        $external->latitude = 34.235918;
+        $external->longitude = -118.563659;
+        (app(MeetingRepository::class))->import($rootServer->id, collect([$external]));
+
+        $this->assertEmpty($this->storedMeeting($rootServer->id)->time_zone);
+    }
+
+    public function testDoesNotDeriveTimeZoneOnServerMapCenter()
+    {
+        FromFileConfig::set('aggregator_mode_enabled', true);
+        config(['aggregator.derive_missing_timezones' => true]);
+        $this->fakeTimeZoneLookup('America/New_York');
+
+        $rootServer = $this->createRootServer(1);
+        $rootServer->server_info = json_encode(['centerLatitude' => '40.7128', 'centerLongitude' => '-74.0060']);
+        $rootServer->save();
+
+        $external = $this->arrangeVirtualMeetingMissingTimeZone($rootServer->id);
+        (app(MeetingRepository::class))->import($rootServer->id, collect([$external]));
+
+        $this->assertEmpty($this->storedMeeting($rootServer->id)->time_zone);
+    }
+
+    public function testDoesNotDeriveTimeZoneOnFrozenKnownMapCenter()
+    {
+        FromFileConfig::set('aggregator_mode_enabled', true);
+        config(['aggregator.derive_missing_timezones' => true]);
+        config(['aggregator.known_map_centers' => [7 => [40.7128, -74.0060]]]);
+        $this->fakeTimeZoneLookup('America/New_York');
+
+        $rootServer = $this->createRootServer(7);
+        $external = $this->arrangeVirtualMeetingMissingTimeZone($rootServer->id);
+        (app(MeetingRepository::class))->import($rootServer->id, collect([$external]));
+
+        $this->assertEmpty($this->storedMeeting($rootServer->id)->time_zone);
     }
 
     // TODO test removing service body removes meeting

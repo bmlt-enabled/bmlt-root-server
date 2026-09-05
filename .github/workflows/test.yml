@@ -60,6 +60,10 @@ jobs:
             | sed 's/, Offset,/, `Offset`,/g' \
             | mysql -h 127.0.0.1 -P "$DB_PORT" -u root -prootserver mysql
 
+      - name: make timezone 🕐
+        run: |
+          make timezone
+
       - name: make test 🧪
         env:
           DB_PORT: ${{ job.services.db.ports[3306] }}

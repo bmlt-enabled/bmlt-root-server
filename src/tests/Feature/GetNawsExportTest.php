@@ -578,7 +578,7 @@ class GetNawsExportTest extends TestCase
     // test that deleted meetings are in the export if they have a world_id, and that they are omitted if the world_id is empty or 'deleted'
     public function testDeletedMeetingsInExport()
     {
-        $repository = new MeetingRepository();
+        $repository = app(MeetingRepository::class);
         $area1 = $this->createArea('Seattle Area', 'sort of Seattle', 0, worldId: 'AR123');
         // Create some meetings.  meeting 1 and 2 will be ordinary (not deleted) meetings. meeting 3, 4, 5, and 6 will be deleted.
         // meeting 1 and 2 should be in the export (it shouldn't matter whether they have a world_id).

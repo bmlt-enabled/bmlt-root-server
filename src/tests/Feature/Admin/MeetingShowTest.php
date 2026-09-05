@@ -468,7 +468,7 @@ class MeetingShowTest extends TestCase
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
 
-        $meetingRepository = new MeetingRepository();
+        $meetingRepository = app(MeetingRepository::class);
         $fieldNames = $meetingRepository->getDataTemplates()->map(fn ($t) => $t->key)->reject(fn ($n) => $n == 'meeting_name');
 
         foreach ($fieldNames as $fieldName) {
@@ -488,7 +488,7 @@ class MeetingShowTest extends TestCase
         $user = $this->createAdminUser();
         $token = $user->createToken('test')->plainTextToken;
 
-        $meetingRepository = new MeetingRepository();
+        $meetingRepository = app(MeetingRepository::class);
         $fieldNames = $meetingRepository->getDataTemplates()->map(fn ($t) => $t->key)->reject(fn ($n) => $n == 'meeting_name');
 
         foreach ($fieldNames as $fieldName) {
