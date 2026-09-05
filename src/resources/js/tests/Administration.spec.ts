@@ -21,13 +21,14 @@ let xlsxWriteFileSpy: MockInstance<typeof XLSX.writeFileXLSX>;
 let translationsWB: XLSX.WorkBook | null;
 let translationsFile: string;
 
+vi.mock('xlsx', { spy: true });
+
 beforeAll(() => {
   originalCreateObjectURL = URL.createObjectURL;
   originalRevokeObjectURL = URL.revokeObjectURL;
   HTMLAnchorElement.prototype.click = vi.fn().mockImplementation(mockClick);
   URL.createObjectURL = vi.fn().mockImplementation(() => 'blob:http://localhost:8000/dummyblob');
   URL.revokeObjectURL = vi.fn();
-  vi.mock('xlsx', { spy: true });
   sharedBeforeAll();
 });
 beforeEach(() => {
