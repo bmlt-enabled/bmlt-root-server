@@ -51,6 +51,10 @@ jobs:
         run: |
           make lint
 
+      - name: make timezone 🕐
+        run: |
+          make timezone
+
       - name: make test 🧪
         env:
           DB_PORT: ${{ job.services.db.ports[3306] }}

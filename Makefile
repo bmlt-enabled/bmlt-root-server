@@ -9,13 +9,14 @@ NODE_MODULES := src/node_modules/.package-lock.json
 FRONTEND := src/public/build/manifest.json
 ZIP_FILE := build/bmlt-server.zip
 EXTRA_DOCKER_COMPOSE_ARGS :=
+COMPOSER_IN_CONTAINER := docker run --pull=always -t --rm -v '$(shell pwd)':/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
 ifeq ($(CI)x, x)
 	DOCKERFILE := Dockerfile-debug
 	IMAGE := bmltserver
 	TAG := local
 	COMPOSER_ARGS :=
 	NPM_FLAG := install
-	COMPOSER_PREFIX := docker run --pull=always -t --rm -v '$(shell pwd)':/code -w /code $(BASE_IMAGE):$(BASE_IMAGE_TAG)
+	COMPOSER_PREFIX := $(COMPOSER_IN_CONTAINER)
 	LINT_PREFIX := docker run -t --rm -v '$(shell pwd)':/code -w /code/src $(IMAGE):$(TAG)
 	TEST_PREFIX := docker run -e XDEBUG_MODE=coverage,debug -t --rm -v '$(shell pwd)/src:/var/www/html/main_server' -w /var/www/html/main_server --network host $(IMAGE):$(TAG)
 	ifneq (,$(wildcard docker/docker-compose.dev.yml))
@@ -39,6 +40,16 @@ else
 	COMPOSER_PREFIX :=
 	LINT_PREFIX := cd src &&
 	TEST_PREFIX := cd src &&
+endif
+
+# Decouple where composer runs from the dev/prod args selected by CI above, so a
+# production build (CI=1) can be produced without composer installed on the host.
+#   CONTAINER=1  force composer to run in the base-image container
+#   CONTAINER=0  force composer to run on the host
+ifeq ($(CONTAINER),1)
+	COMPOSER_PREFIX := $(COMPOSER_IN_CONTAINER)
+else ifeq ($(CONTAINER),0)
+	COMPOSER_PREFIX :=
 endif
 
 help:  ## Print the help documentation
